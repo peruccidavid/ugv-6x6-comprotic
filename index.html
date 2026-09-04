@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="es" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UGV 6X6 COMPROTIC-UNEFA | Soberanía Tecnológica y Robótica Táctica</title>
+  <meta name="description" content="Vehículo Terrestre no Tripulado UGV 6x6 de exploración autónoma desarrollado por COMPROTIC y UNEFA para misiones críticas en terrenos hostiles.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            tactical: {
+              black: '#050811',
+              dark: '#0b101d',
+              card: '#0f172a',
+              green: '#00ff88',
+              cyan: '#00f0ff',
+              emerald: '#10b981'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Custom Tactical HUD CSS -->
+  <link rel="stylesheet" href="css/custom-hud.css">
+</head>
+<body class="bg-[#050811] text-slate-100 tactical-grid-bg antialiased selection:bg-emerald-500 selection:text-black">
+
+  <!-- ==================== TOP TELEMETRY HUD BAR ==================== -->
+  <div class="sticky top-0 z-50 bg-[#070b16]/90 backdrop-blur-md border-b border-cyan-500/20 text-xs font-mono-code">
+    <div class="max-w-7xl mx-auto px-4 py-2 flex flex-wrap items-center justify-between gap-3 text-slate-300">
+      
+      <!-- Status Beacon -->
+      <div class="flex items-center gap-2">
+        <span class="status-beacon"></span>
+        <span class="text-emerald-400 font-bold font-hud tracking-wider">COMPROTIC-UNEFA // SYS ONLINE</span>
+      </div>
+
+      <!-- Telemetry Live Feed -->
+      <div class="hidden lg:flex items-center gap-6 text-slate-400">
+        <div><span class="text-slate-500">PITCH:</span> <span id="telemetry-pitch" class="text-cyan-400 font-bold">-3.4°</span></div>
+        <div><span class="text-slate-500">ROLL:</span> <span id="telemetry-roll" class="text-cyan-400 font-bold">+1.2°</span></div>
+        <div><span class="text-slate-500">YAW:</span> <span id="telemetry-yaw" class="text-cyan-400 font-bold">142.8°</span></div>
+        <div><span class="text-slate-500">CPU TEMP:</span> <span id="telemetry-temp" class="text-emerald-400 font-bold">42.5°C</span></div>
+        <div><span class="text-slate-500">UPS BATERÍA:</span> <span id="telemetry-bat" class="text-emerald-400 font-bold">98.4%</span></div>
+        <div><span class="text-slate-500">MESH LAT:</span> <span id="telemetry-latency" class="text-cyan-300 font-bold">11 ms</span></div>
+        <div><span class="text-slate-500">GPS:</span> <span id="telemetry-gps" class="text-emerald-300 font-bold">10.4806° N, 66.9036° W</span></div>
+      </div>
+
+      <!-- Navigation & Mobile Toggle -->
+      <div class="flex items-center gap-4">
+        <nav class="hidden md:flex items-center gap-6 font-hud text-xs tracking-wider text-slate-300">
+          <a href="#hero" class="hover:text-emerald-400 transition-colors">INICIO</a>
+          <a href="#movilidad" class="hover:text-emerald-400 transition-colors">CHASIS 6X6</a>
+          <a href="#vision" class="hover:text-emerald-400 transition-colors">PERCEPCIÓN IA</a>
+          <a href="#conectividad" class="hover:text-emerald-400 transition-colors">ENLACE MESH</a>
+          <a href="#energia" class="hover:text-emerald-400 transition-colors">POTENCIA & MANIPULACIÓN</a>
+        </nav>
+        <button id="mobile-nav-toggle" class="md:hidden p-1 text-emerald-400 border border-emerald-500/30 rounded" aria-label="Abrir Menú">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Navigation -->
+    <div id="mobile-nav-menu" class="hidden md:hidden bg-[#0a0f1d] border-b border-emerald-500/30 px-4 py-3 font-hud text-xs space-y-2">
+      <a href="#hero" class="block py-1 text-slate-300 hover:text-emerald-400">01 // INICIO</a>
+      <a href="#movilidad" class="block py-1 text-slate-300 hover:text-emerald-400">02 // CHASIS & ROCKER-BOGIE</a>
+      <a href="#vision" class="block py-1 text-slate-300 hover:text-emerald-400">03 // INTELIGENCIA & VISIÓN IA</a>
+      <a href="#conectividad" class="block py-1 text-slate-300 hover:text-emerald-400">04 // CONECTIVIDAD & ENLACE MESH</a>
+      <a href="#energia" class="block py-1 text-slate-300 hover:text-emerald-400">05 // ENERGÍA & BRAZO ROBÓTICO</a>
+    </div>
+  </div>
+
+  <!-- ==================== HERO SECTION ==================== -->
+  <section id="hero" class="relative min-h-[92vh] flex items-center justify-center pt-8 pb-16 px-4 overflow-hidden">
+    <!-- Ambient Light Glows -->
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[140px] pointer-events-none"></div>
+    <div class="absolute bottom-10 right-10 w-[400px] h-[400px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+      
+      <!-- Text & CTA Content (7 cols) -->
+      <div class="lg:col-span-7 space-y-6 reveal-on-scroll">
+        
+        <!-- Tactical Badge -->
+        <div class="inline-flex items-center gap-3 px-3.5 py-1.5 rounded-full bg-emerald-950/50 border border-emerald-500/40 text-emerald-400 text-xs font-hud tracking-widest uppercase">
+          <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+          <span>PROTOTIPO DEFECTO & EXPLORACIÓN // COMPROTIC-UNEFA</span>
+        </div>
+
+        <!-- Main Title -->
+        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-display tracking-tight text-white leading-tight">
+          Soberanía Tecnológica y Robótica Táctica: <br>
+          <span class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 text-glow-green">
+            UGV 6X6 COMPROTIC
+          </span>
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="text-lg md:text-xl text-slate-300 leading-relaxed font-light max-w-2xl">
+          Vehículo Terrestre no Tripulado de exploración autónoma para misiones críticas en terrenos hostiles, diseñado para recolección de inteligencia, reconocimiento perimetral y manipulación segura a distancia.
+        </p>
+
+        <!-- Dynamic Quick Tech Badges -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 py-2 font-mono-code text-xs">
+          <div class="p-2.5 bg-slate-900/80 border border-slate-800 rounded">
+            <span class="text-slate-500 block">SUSPENSIÓN</span>
+            <span class="text-emerald-400 font-bold">Rocker-Bogie 6x6</span>
+          </div>
+          <div class="p-2.5 bg-slate-900/80 border border-slate-800 rounded">
+            <span class="text-slate-500 block">PROCESAMIENTO</span>
+            <span class="text-cyan-400 font-bold">Raspberry Pi 5 + IA</span>
+          </div>
+          <div class="p-2.5 bg-slate-900/80 border border-slate-800 rounded">
+            <span class="text-slate-500 block">ENLACE RED</span>
+            <span class="text-emerald-400 font-bold">WiFi 6 Mesh 4,000ft²</span>
+          </div>
+          <div class="p-2.5 bg-slate-900/80 border border-slate-800 rounded">
+            <span class="text-slate-500 block">AUTONOMÍA</span>
+            <span class="text-amber-400 font-bold">24,000 mAh Mini UPS</span>
+          </div>
+        </div>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-wrap gap-4 pt-2">
+          <a href="#movilidad" class="inline-flex items-center gap-3 px-7 py-3.5 rounded-lg bg-emerald-500 text-slate-950 font-hud font-bold text-sm tracking-wider hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/25 border-glow-green">
+            <span>EXPLORAR ESPECIFICACIONES</span>
+            <i data-lucide="arrow-down" class="w-4 h-4"></i>
+          </a>
+          <a href="#vision" class="inline-flex items-center gap-3 px-7 py-3.5 rounded-lg bg-slate-900/80 text-cyan-400 border border-cyan-500/40 font-hud font-semibold text-sm tracking-wider hover:bg-cyan-950/40 hover:border-cyan-400 transition-all">
+            <i data-lucide="eye" class="w-4 h-4"></i>
+            <span>VER CAPACIDADES TÁCTICAS</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Hero Visual HUD Frame (5 cols) -->
+      <div class="lg:col-span-5 relative reveal-on-scroll">
+        <div class="hud-card hud-corners hud-corners-green rounded-xl p-2 scanline-container overflow-hidden">
+          <div class="laser-beam"></div>
+          
+          <!-- Image -->
+          <img 
+            src="images/ugv-pedregoso.jpg" 
+            alt="UGV 6x6 COMPROTIC explorando terreno rocoso" 
+            class="w-full h-[380px] sm:h-[440px] object-cover rounded-lg transform hover:scale-105 transition-transform duration-500"
+          >
+
+          <!-- Tactical HUD Overlay Text -->
+          <div class="absolute top-4 left-4 right-4 flex justify-between items-center pointer-events-none text-xs font-mono-code">
+            <span class="px-2 py-1 bg-black/80 text-emerald-400 border border-emerald-500/40 rounded">CAM_01: TARGETING</span>
+            <span class="px-2 py-1 bg-black/80 text-cyan-400 border border-cyan-500/40 rounded">STABILITY: 99.8%</span>
+          </div>
+
+          <div class="absolute bottom-4 left-4 right-4 bg-slate-950/90 backdrop-blur-sm border border-slate-800 p-3 rounded-lg text-xs font-mono-code flex items-center justify-between">
+            <div>
+              <span class="text-slate-400 block">ESTADO DE TERRENO</span>
+              <span class="text-white font-bold">ROCOSO / DESNIVEL SEVERO</span>
+            </div>
+            <div class="text-right">
+              <span class="text-slate-400 block">MODO TRACCIÓN</span>
+              <span class="text-emerald-400 font-bold">6WD ACTIVO</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== SECCIÓN 2: MOVILIDAD & ESTRUCTURA EXTREMA ==================== -->
+  <section id="movilidad" class="py-20 px-4 bg-[#080d19]/80 relative border-t border-slate-800/80">
+    <div class="max-w-7xl mx-auto space-y-12">
+      
+      <!-- Section Header -->
+      <div class="text-center max-w-3xl mx-auto space-y-4 reveal-on-scroll">
+        <div class="inline-flex items-center gap-2 text-cyan-400 font-hud text-xs tracking-widest uppercase">
+          <i data-lucide="cpu" class="w-4 h-4"></i>
+          <span>INGENIERÍA MECÁNICA & ARQUITECTURA DE SUSPENSIÓN</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-bold font-display text-white">
+          Movilidad y Estructura Extrema 6x6
+        </h2>
+        <p class="text-slate-400 text-base">
+          Diseñado para superar barreras geográficas extremas donde los vehículos convencionales quedan inmovilizados.
+        </p>
+      </div>
+
+      <!-- Feature Grid: Image + 3 Interactive Cards -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <!-- Left: Image Display -->
+        <div class="lg:col-span-6 reveal-on-scroll">
+          <div class="hud-card hud-corners rounded-xl p-2">
+            <img 
+              src="images/ugv-rocker-bogie.jpg" 
+              alt="Sistema de suspensión rocker-bogie y chasis del UGV" 
+              class="w-full h-[400px] object-cover rounded-lg"
+            >
+            <div class="p-4 bg-slate-900/90 border-t border-slate-800 rounded-b-lg">
+              <div class="flex items-center justify-between text-xs font-hud">
+                <span class="text-slate-400">MECANISMO ARTICULADO</span>
+                <span class="text-emerald-400 font-bold">SUSPENSIÓN ROCKER-BOGIE</span>
+              </div>
+              <p class="text-slate-300 text-xs mt-1">
+                Absorción dinámica del 100% de irregularidades del terreno manteniendo la cabina de sensores nivelada.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Technical Cards -->
+        <div class="lg:col-span-6 space-y-4 reveal-on-scroll">
+          
+          <!-- Card 1: Chasis -->
+          <div class="hud-card p-5 rounded-xl flex items-start gap-4 cursor-pointer" onclick="openTechModal('rocker-bogie')">
+            <div class="p-3 bg-emerald-950/60 border border-emerald-500/30 rounded-lg text-emerald-400 shrink-0">
+              <i data-lucide="shield" class="w-6 h-6"></i>
+            </div>
+            <div class="space-y-1">
+              <h3 class="text-lg font-bold font-display text-white flex items-center gap-2">
+                Chasis Metálico de 2 Pulgadas
+                <i data-lucide="chevron-right" class="w-4 h-4 text-emerald-400"></i>
+              </h3>
+              <p class="text-slate-300 text-sm">
+                Construcción reforzada a prueba de impactos y deformaciones mecánicas. Estructura de alta rigidez torsional diseñada para proteger el núcleo electrónico y las baterías.
+              </p>
+            </div>
+          </div>
+
+          <!-- Card 2: Rocker-Bogie -->
+          <div class="hud-card p-5 rounded-xl flex items-start gap-4 cursor-pointer" onclick="openTechModal('rocker-bogie')">
+            <div class="p-3 bg-cyan-950/60 border border-cyan-500/30 rounded-lg text-cyan-400 shrink-0">
+              <i data-lucide="workflow" class="w-6 h-6"></i>
+            </div>
+            <div class="space-y-1">
+              <h3 class="text-lg font-bold font-display text-white flex items-center gap-2">
+                Tracción Total 6x6 & Suspensión Rocker-Bogie
+                <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-400"></i>
+              </h3>
+              <p class="text-slate-300 text-sm">
+                Distribución de par neumático independiente en las 6 ruedas. Permite escalar rocas de gran dimensión manteniendo estabilidad absoluta sin volcamiento.
+              </p>
+            </div>
+          </div>
+
+          <!-- Card 3: Vadeo y Escarpados -->
+          <div class="hud-card p-5 rounded-xl flex items-start gap-4 cursor-pointer" onclick="openTechModal('rocker-bogie')">
+            <div class="p-3 bg-emerald-950/60 border border-emerald-500/30 rounded-lg text-emerald-400 shrink-0">
+              <i data-lucide="waves" class="w-6 h-6"></i>
+            </div>
+            <div class="space-y-1">
+              <h3 class="text-lg font-bold font-display text-white flex items-center gap-2">
+                Vadeo y Terrenos Escarpados
+                <i data-lucide="chevron-right" class="w-4 h-4 text-emerald-400"></i>
+              </h3>
+              <p class="text-slate-300 text-sm">
+                Sellado estanco electromecánico preparado para cruce de cauces de agua de bajo calado, lechos fangosos, escombros urbaniados y pendientes empinadas.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== SECCIÓN 3: INTELIGENCIA, PERCEPCIÓN & CÁMARAS ==================== -->
+  <section id="vision" class="py-20 px-4 relative">
+    <div class="max-w-7xl mx-auto space-y-12">
+      
+      <!-- Section Header -->
+      <div class="text-center max-w-3xl mx-auto space-y-4 reveal-on-scroll">
+        <div class="inline-flex items-center gap-2 text-emerald-400 font-hud text-xs tracking-widest uppercase">
+          <i data-lucide="brain-circuit" class="w-4 h-4"></i>
+          <span>PERCEPCIÓN COMPUTACIONAL & VISIÓN TÁCTICA MULTIESPECTRAL</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-bold font-display text-white">
+          Inteligencia, Percepción y Visión IA
+        </h2>
+        <p class="text-slate-400 text-base">
+          Procesamiento de IA a bordo impulsado por Raspberry Pi 5 y Google MediaPipe Studio para asistencia autónoma en decisiones tácticas.
+        </p>
+      </div>
+
+      <!-- Live Tactical HUD Camera Suite Viewer Interactive Component -->
+      <div class="hud-card hud-corners hud-corners-green rounded-xl p-4 sm:p-6 reveal-on-scroll">
+        
+        <!-- Viewer Header Bar & Controls -->
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <div>
+            <span class="text-xs font-hud text-emerald-400 block">SIMULADOR EN TIEMPO REAL</span>
+            <h3 id="hud-camera-title" class="text-lg sm:text-xl font-bold font-display text-white">
+              Arducam 16MP Auto-Focus HD + MediaPipe IA
+            </h3>
+            <p id="hud-camera-spec" class="text-xs font-mono-code text-slate-400">
+              Google MediaPipe Studio Active // Detección de Objetos en Tiempo Real // 60 FPS
+            </p>
+          </div>
+
+          <!-- Camera Switch Buttons -->
+          <div class="flex flex-wrap items-center gap-2 font-hud text-xs">
+            <button id="btn-cam-ov5647" onclick="switchCameraFeed('ov5647')" class="cam-btn px-3 py-2 rounded border border-slate-800 bg-slate-900/60 text-slate-400 hover:text-emerald-400">
+              OV5647 160° IR
+            </button>
+            <button id="btn-cam-arducam" onclick="switchCameraFeed('arducam')" class="cam-btn active px-3 py-2 rounded border border-emerald-500 bg-emerald-950/40 text-emerald-400">
+              ARDUCAM 16MP HD
+            </button>
+            <button id="btn-cam-ptz" onclick="switchCameraFeed('ptz')" class="cam-btn px-3 py-2 rounded border border-slate-800 bg-slate-900/60 text-slate-400 hover:text-emerald-400">
+              PTZ 360° MOTORIZADA
+            </button>
+          </div>
+        </div>
+
+        <!-- Video Feed Container with Canvas Overlay -->
+        <div class="relative mt-4 h-[350px] sm:h-[450px] rounded-lg overflow-hidden border border-slate-800 bg-black">
+          <img 
+            id="hud-camera-img" 
+            src="images/ugv-pedregoso.jpg" 
+            alt="Visor táctico de cámara del UGV" 
+            class="w-full h-full object-cover transition-opacity duration-300"
+          >
+
+          <!-- Color tint overlay for IR night vision -->
+          <div id="hud-vision-overlay" class="absolute inset-0 pointer-events-none transition-colors duration-300"></div>
+
+          <!-- Dynamic HTML5 Canvas for AI Bounding Box & Target Crosshairs -->
+          <canvas id="hud-ai-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-10"></canvas>
+
+          <!-- Tactical HUD Frame Graphics -->
+          <div class="absolute bottom-3 left-3 bg-black/80 backdrop-blur-md p-2.5 rounded border border-emerald-500/40 text-[11px] font-mono-code space-y-1 text-slate-300">
+            <div><span class="text-slate-500">IA ENGINE:</span> <span class="text-emerald-400">Google MediaPipe Studio</span></div>
+            <div><span class="text-slate-500">INERTIAL:</span> <span class="text-cyan-400">Adafruit 9-DOF BNO055</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Hardware Breakdown Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Raspberry Pi 5 & MediaPipe -->
+        <div class="hud-card p-6 rounded-xl space-y-3 cursor-pointer" onclick="openTechModal('pi5')">
+          <div class="w-10 h-10 rounded-lg bg-emerald-950/80 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+            <i data-lucide="cpu" class="w-5 h-5"></i>
+          </div>
+          <h3 class="text-xl font-bold font-display text-white">Raspberry Pi 5 (8GB RAM)</h3>
+          <p class="text-slate-300 text-sm">
+            Procesamiento de cómputo de alta eficiencia impulsado por MediaPipe Studio. Agentes inteligentes analizan transmisiones de video para alertar anomalias en campo.
+          </p>
+          <div class="pt-2 text-xs font-hud text-emerald-400 flex items-center gap-1">
+            <span>VER DETALLES DE CÓMPUTO</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </div>
+        </div>
+
+        <!-- Triple Suite Sensor Feed -->
+        <div class="hud-card p-6 rounded-xl space-y-3">
+          <div class="w-10 h-10 rounded-lg bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center text-cyan-400">
+            <i data-lucide="camera" class="w-5 h-5"></i>
+          </div>
+          <h3 class="text-xl font-bold font-display text-white">Suite Triple Cámara</h3>
+          <ul class="text-slate-300 text-xs space-y-2 font-mono-code">
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i> OV5647 5MP Ojo de pez (160°) + IR Night</li>
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i> Módulo Arducam 16MP Enfoque Auto HD</li>
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i> Cámara Motorizada Pan-Tilt 360°</li>
+          </ul>
+        </div>
+
+        <!-- Inercial & GPS -->
+        <div class="hud-card p-6 rounded-xl space-y-3">
+          <div class="w-10 h-10 rounded-lg bg-emerald-950/80 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+            <i data-lucide="navigation" class="w-5 h-5"></i>
+          </div>
+          <h3 class="text-xl font-bold font-display text-white">Adafruit 9-DOF IMU & GPS</h3>
+          <p class="text-slate-300 text-sm">
+            Sensor inercial BNO055 integrado con giroscopio, acelerómetro y magnetómetro de 9 grados de libertad para estabilización de navegación dinámica y telemetría GPS.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== SECCIÓN 4: CONECTIVIDAD AVANZADA & ENLACE MESH (DESTACADA) ==================== -->
+  <section id="conectividad" class="py-20 px-4 bg-[#070b16] relative border-y border-cyan-500/20">
+    <!-- Ambient Cyan Glow -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-cyan-500/10 rounded-full blur-[160px] pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto space-y-12 relative z-10">
+      
+      <!-- Section Header -->
+      <div class="text-center max-w-3xl mx-auto space-y-4 reveal-on-scroll">
+        <div class="inline-flex items-center gap-2 text-cyan-400 font-hud text-xs tracking-widest uppercase">
+          <i data-lucide="radio" class="w-4 h-4"></i>
+          <span>INFRAESTRUCTURA DE ENLACE TÁCTICO & RED MESH CUALIFICADA</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-white">
+          Conectividad Avanzada y Enlace Táctico
+        </h2>
+        <p class="text-slate-300 text-base">
+          Sistema de comunicaciones redundante Mesh WiFi 6 con software central de control COMPROTIC en tiempo real.
+        </p>
+      </div>
+
+      <!-- Prominent Visual Feature: Nano Banana Tactical Relay Illustration -->
+      <div class="hud-card hud-corners rounded-2xl p-4 sm:p-8 border-cyan-500/40 reveal-on-scroll">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <!-- Tactical Image Display -->
+          <div class="lg:col-span-7 relative">
+            <div class="rounded-xl overflow-hidden border border-cyan-500/30 scanline-container">
+              <img 
+                src="images/ugv-transmision-drone.jpg" 
+                alt="Diagrama de transmisión UGV transmitiendo a Dron y Centro de Mando" 
+                class="w-full h-[380px] sm:h-[460px] object-cover"
+              >
+            </div>
+            <!-- Signal Beacon Pulse graphic -->
+            <div class="absolute top-12 left-1/3 w-16 h-16 rounded-full border border-cyan-400 pulse-circle pointer-events-none"></div>
+          </div>
+
+          <!-- Network Architecture Details -->
+          <div class="lg:col-span-5 space-y-6">
+            
+            <div class="inline-block px-3 py-1 bg-cyan-950/80 border border-cyan-500/50 rounded text-cyan-300 font-hud text-xs">
+              SISTEMA REPETIDOR AÉREO COMPROTIC
+            </div>
+
+            <h3 class="text-2xl sm:text-3xl font-bold font-display text-white leading-tight">
+              Re-transmisión Electromagnética Tripartita
+            </h3>
+
+            <p class="text-slate-300 text-sm leading-relaxed">
+              El UGV 6x6 emite señales electromagnéticas a través de sus antenas de alta ganancia hacia un cuadricóptero en el cielo. El dron actúa como repetidor volador de baja latencia retransmitiendo el flujo de video y datos directo al Centro de Mando Remoto.
+            </p>
+
+            <div class="space-y-3 font-mono-code text-xs">
+              
+              <!-- Relay Step 1 -->
+              <div class="p-3 bg-slate-900/90 border border-slate-800 rounded flex items-center gap-3">
+                <div class="w-8 h-8 rounded bg-emerald-950 border border-emerald-500 flex items-center justify-center text-emerald-400 shrink-0">1</div>
+                <div>
+                  <span class="text-white font-bold block">UGV 6X6 Terrestre</span>
+                  <span class="text-slate-400">Emisión Mesh TP-Link Deco X20 WiFi 6</span>
+                </div>
+              </div>
+
+              <!-- Relay Step 2 -->
+              <div class="p-3 bg-slate-900/90 border border-slate-800 rounded flex items-center gap-3">
+                <div class="w-8 h-8 rounded bg-cyan-950 border border-cyan-500 flex items-center justify-center text-cyan-400 shrink-0">2</div>
+                <div>
+                  <span class="text-white font-bold block">Dron Cuadricóptero Repetidor</span>
+                  <span class="text-slate-400">Puente Aéreo de Señal (Reducción de Zona Ciega)</span>
+                </div>
+              </div>
+
+              <!-- Relay Step 3 -->
+              <div class="p-3 bg-slate-900/90 border border-slate-800 rounded flex items-center gap-3">
+                <div class="w-8 h-8 rounded bg-emerald-950 border border-emerald-500 flex items-center justify-center text-emerald-400 shrink-0">3</div>
+                <div>
+                  <span class="text-white font-bold block">Centro de Mando Base</span>
+                  <span class="text-slate-400">Interfaz de Telemetría COMPROTIC en Tiempo Real</span>
+                </div>
+              </div>
+
+            </div>
+
+            <button onclick="openTechModal('mesh')" class="w-full py-3 bg-cyan-950/60 border border-cyan-500/40 text-cyan-400 font-hud text-xs tracking-wider rounded-lg hover:bg-cyan-900/60 transition-colors flex items-center justify-center gap-2">
+              <i data-lucide="wifi" class="w-4 h-4"></i>
+              <span>VER ESPECIFICACIONES MESH COMPROTIC</span>
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== SECCIÓN 5: ENERGÍA & MANIPULACIÓN ROBÓTICA ==================== -->
+  <section id="energia" class="py-20 px-4 relative">
+    <div class="max-w-7xl mx-auto space-y-12">
+      
+      <!-- Section Header -->
+      <div class="text-center max-w-3xl mx-auto space-y-4 reveal-on-scroll">
+        <div class="inline-flex items-center gap-2 text-emerald-400 font-hud text-xs tracking-widest uppercase">
+          <i data-lucide="zap" class="w-4 h-4"></i>
+          <span>AUTONOMÍA ENERGÉTICA & ACTUACIÓN MECÁNICA PERIFÉRICA</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-bold font-display text-white">
+          Energía y Manipulación Robótica
+        </h2>
+        <p class="text-slate-400 text-base">
+          Resistencia eléctrica ininterrumpida y brazo articulado para interacciones tácticas a distancia.
+        </p>
+      </div>
+
+      <!-- Grid Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <!-- Left Column: Specs Tabs & Info -->
+        <div class="lg:col-span-6 space-y-6 reveal-on-scroll">
+          
+          <!-- Card: Mini UPS KP7 PRO -->
+          <div class="hud-card p-6 rounded-xl space-y-4 border-amber-500/30">
+            <div class="flex items-center gap-3">
+              <div class="p-3 bg-amber-950/60 border border-amber-500/40 text-amber-400 rounded-lg">
+                <i data-lucide="battery-charging" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <span class="text-xs font-hud text-amber-400">UNIDAD DE ALIMENTACIÓN</span>
+                <h3 class="text-xl font-bold font-display text-white">Mini UPS KP7 PRO (24,000 mAh)</h3>
+              </div>
+            </div>
+            
+            <p class="text-slate-300 text-sm">
+              Sistema de respaldo de alta densidad energética que garantiza <strong>1 hora continua de autonomía</strong> a plena carga operativa de motores, cómputo e iluminación IR, previniendo caídas de tensión (Zero Voltage Drop).
+            </p>
+
+            <div class="grid grid-cols-2 gap-3 text-xs font-mono-code">
+              <div class="p-2.5 bg-slate-900 rounded border border-slate-800">
+                <span class="text-slate-500 block">CAPACIDAD</span>
+                <span class="text-amber-400 font-bold">24,000 mAh (88.8Wh)</span>
+              </div>
+              <div class="p-2.5 bg-slate-900 rounded border border-slate-800">
+                <span class="text-slate-500 block">TIEMPO REACCIÓN</span>
+                <span class="text-emerald-400 font-bold">0 ms (Zero-drop)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card: Brazo Robótico 3D -->
+          <div class="hud-card p-6 rounded-xl space-y-4">
+            <div class="flex items-center gap-3">
+              <div class="p-3 bg-emerald-950/60 border border-emerald-500/40 text-emerald-400 rounded-lg">
+                <i data-lucide="grab" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <span class="text-xs font-hud text-emerald-400">ACTUADOR MECÁNICO</span>
+                <h3 class="text-xl font-bold font-display text-white">Brazo Robótico Impreso en 3D</h3>
+              </div>
+            </div>
+
+            <p class="text-slate-300 text-sm">
+              Manipulador articulado multieje fabricado mediante impresión 3D de polímero técnico de alto impacto. Permite la sujeción, traslado y desactivación de objetos sospechosos a distancia segura para el operador.
+            </p>
+
+            <button onclick="openTechModal('arm-power')" class="px-4 py-2 bg-emerald-950/60 border border-emerald-500/40 text-emerald-400 font-hud text-xs rounded hover:bg-emerald-900/60 transition-colors">
+              VER DETALLES DE CARGA Y GRADOS DE LIBERTAD
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Visual Image -->
+        <div class="lg:col-span-6 reveal-on-scroll">
+          <div class="hud-card hud-corners rounded-xl p-2">
+            <img 
+              src="images/ugv-brazo-ups.jpg" 
+              alt="Brazo robótico 3D y módulo Mini UPS en el UGV" 
+              class="w-full h-[400px] object-cover rounded-lg"
+            >
+            <div class="p-4 bg-slate-900/90 border-t border-slate-800 rounded-b-lg flex items-center justify-between text-xs font-mono-code">
+              <span class="text-slate-400">UNIDAD DE ACTUACIÓN MANIPULADORA</span>
+              <span class="text-emerald-400 font-bold">3D PRINTED ARM // OK</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== PIE DE PÁGINA INSTITUCIONAL (FOOTER) ==================== -->
+  <footer class="bg-[#03060d] border-t border-slate-800 py-12 px-4 text-slate-400 font-mono-code text-xs">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8">
+      
+      <!-- Institutional Branding (6 cols) -->
+      <div class="md:col-span-6 space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded bg-emerald-500/20 border border-emerald-500 flex items-center justify-center text-emerald-400 font-bold font-hud">
+            C
+          </div>
+          <div>
+            <span class="text-white font-bold font-display text-lg block leading-none">COMPROTIC - UNEFA</span>
+            <span class="text-emerald-400 text-[10px] font-hud tracking-widest">SOBERANÍA TECNOLÓGICA Y ROBÓTICA</span>
+          </div>
+        </div>
+
+        <p class="text-slate-400 leading-relaxed text-xs max-w-lg">
+          Proyecto de Desarrollo e Innovación Nacional en Robótica de Defensa y Exploración Autónoma. Vehículo Terrestre no Tripulado (UGV) 6x6 desarrollado conjuntamente por el equipo de **COMPROTIC** y la **Universidad Nacional Experimental Politécnica de la Fuerza Armada Nacional Bolivariana (UNEFA)**.
+        </p>
+      </div>
+
+      <!-- Quick Links (3 cols) -->
+      <div class="md:col-span-3 space-y-3 font-hud">
+        <span class="text-white font-bold block text-sm">SECCIONES TÁCTICAS</span>
+        <ul class="space-y-2 text-slate-400 text-xs">
+          <li><a href="#hero" class="hover:text-emerald-400 transition-colors">01 // Cabecera Principal</a></li>
+          <li><a href="#movilidad" class="hover:text-emerald-400 transition-colors">02 // Chasis & Rocker-Bogie</a></li>
+          <li><a href="#vision" class="hover:text-emerald-400 transition-colors">03 // Percepción & IA</a></li>
+          <li><a href="#conectividad" class="hover:text-emerald-400 transition-colors">04 // Enlace Mesh & Dron Relay</a></li>
+          <li><a href="#energia" class="hover:text-emerald-400 transition-colors">05 // UPS KP7 PRO & Brazo 3D</a></li>
+        </ul>
+      </div>
+
+      <!-- Technical & Institutional Credits (3 cols) -->
+      <div class="md:col-span-3 space-y-3">
+        <span class="text-white font-bold font-hud block text-sm">CRÉDITOS OFICIALES</span>
+        <div class="p-3 bg-slate-900/80 border border-slate-800 rounded space-y-2">
+          <div class="text-emerald-400 font-bold">COMPROTIC</div>
+          <div class="text-slate-300">UNEFA - Fuerza Armada Nacional Bolivariana</div>
+          <div class="text-slate-500 text-[10px]">República Bolivariana de Venezuela</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom Copyright -->
+    <div class="max-w-7xl mx-auto mt-8 pt-6 border-t border-slate-900 flex flex-wrap items-center justify-between gap-4 text-[11px] text-slate-500">
+      <div>© 2026 COMPROTIC - UNEFA. Todos los derechos reservados.</div>
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span>DESARROLLO DE HARDWARE & SOFTWARE NACIONAL</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== TECHNICAL DEEP-DIVE MODAL ==================== -->
+  <div id="tech-modal" class="fixed inset-0 z-50 hidden modal-overlay flex items-center justify-center p-4">
+    <div class="hud-card hud-corners hud-corners-green rounded-xl max-w-2xl w-full p-6 space-y-5 bg-[#0b101d] border-emerald-500/40 relative">
+      
+      <!-- Modal Close Button -->
+      <button id="modal-close" class="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded bg-slate-900 border border-slate-800">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <!-- Modal Header -->
+      <div class="space-y-1 pr-8">
+        <span class="text-xs font-hud text-emerald-400 uppercase tracking-widest block">DESGLOSE TÉCNICO COMPROTIC</span>
+        <h3 id="modal-title" class="text-2xl font-bold font-display text-white">Título Modal</h3>
+        <p id="modal-subtitle" class="text-xs font-mono-code text-slate-400">Subtítulo Modal</p>
+      </div>
+
+      <!-- Modal Body -->
+      <div id="modal-body" class="border-t border-slate-800 pt-4 text-sm leading-relaxed">
+        <!-- Content injected dynamically via JS -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="border-t border-slate-800 pt-3 flex justify-end">
+        <button onclick="closeTechModal()" class="px-5 py-2 bg-emerald-500 text-slate-950 font-hud font-bold text-xs rounded hover:bg-emerald-400 transition-colors">
+          CERRAR VENTANA
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Initialize Lucide Icons -->
+  <script>
+    lucide.createIcons();
+  </script>
+
+  <!-- Application Scripts -->
+  <script src="js/telemetry-simulator.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
