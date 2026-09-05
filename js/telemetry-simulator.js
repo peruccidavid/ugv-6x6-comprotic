@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
       src: 'images/ugv-camaras-suite.jpg',
       title: 'Cámara OV5647 5MP Ojo de Pez (160° IR)',
       spec: 'Modo Infrarrojo Activado // FOV: 160° Diagonal // Visión Nocturna 850nm',
-      overlayTint: 'rgba(0, 255, 136, 0.15)'
+      overlayTint: 'rgba(184, 139, 69, 0.15)'
     },
     arducam: {
       src: 'images/ugv-pedregoso.jpg',
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
       src: 'images/ugv-rocker-bogie.jpg',
       title: 'Cámara Motorizada PTZ 360° Periférica',
       spec: 'Giro Pan-Tilt Servo Asistido // Ángulo Acimut: 215° // Elevación: +15°',
-      overlayTint: 'rgba(0, 240, 255, 0.08)'
+      overlayTint: 'rgba(216, 168, 94, 0.08)'
     }
   };
 
@@ -59,14 +59,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Update active tab buttons UI
     document.querySelectorAll('.cam-btn').forEach(btn => {
-      btn.classList.remove('active', 'border-emerald-500', 'bg-emerald-950/40', 'text-emerald-400');
-      btn.classList.add('border-slate-800', 'bg-slate-900/60', 'text-slate-400');
+      btn.classList.remove('active', 'border-2', 'border-[#f7dc9f]', 'border-[#b88b45]', 'bg-[#b88b45]', 'text-slate-950', 'font-black', 'shadow-lg');
+      btn.classList.add('border-2', 'border-slate-700', 'bg-slate-900/95', 'text-slate-200', 'font-bold');
     });
 
     const activeBtn = document.getElementById(`btn-cam-${mode}`);
     if (activeBtn) {
-      activeBtn.classList.add('active', 'border-emerald-500', 'bg-emerald-950/40', 'text-emerald-400');
-      activeBtn.classList.remove('border-slate-800', 'bg-slate-900/60', 'text-slate-400');
+      activeBtn.classList.add('active', 'border-2', 'border-[#f7dc9f]', 'bg-[#b88b45]', 'text-slate-950', 'font-black', 'shadow-lg', 'shadow-[#b88b45]/35');
+      activeBtn.classList.remove('border-slate-700', 'bg-slate-900/95', 'text-slate-200', 'font-bold');
     }
 
     // Update Image & Labels
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Draw central tactical crosshair
     const cx = w / 2;
     const cy = h / 2;
-    ctx.strokeStyle = 'rgba(0, 240, 255, 0.4)';
+    ctx.strokeStyle = 'rgba(216, 168, 94, 0.5)';
     ctx.lineWidth = 1;
 
     ctx.beginPath();
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.moveTo(cx, cy - 20); ctx.lineTo(cx, cy + 20);
     ctx.stroke();
 
-    ctx.strokeStyle = 'rgba(0, 255, 136, 0.6)';
+    ctx.strokeStyle = 'rgba(184, 139, 69, 0.8)';
     ctx.beginPath();
     ctx.arc(cx, cy, 35, 0, Math.PI * 2);
     ctx.stroke();
@@ -123,45 +123,45 @@ document.addEventListener('DOMContentLoaded', () => {
       const box1W = w * 0.28;
       const box1H = h * 0.35;
 
-      // Draw Green Bounding Box for Rock/Obstacle
-      ctx.strokeStyle = '#00ff88';
+      // Draw Gold Bounding Box for Rock/Obstacle
+      ctx.strokeStyle = '#b88b45';
       ctx.lineWidth = 2;
       ctx.strokeRect(box1X, box1Y, box1W, box1H);
 
       // Label tag
-      ctx.fillStyle = '#00ff88';
+      ctx.fillStyle = '#b88b45';
       ctx.fillRect(box1X, box1Y - 22, 180, 22);
       ctx.fillStyle = '#050811';
       ctx.font = 'bold 11px JetBrains Mono';
       ctx.fillText('OBSTÁCULO: ROCA [94%]', box1X + 6, box1Y - 7);
 
-      // Draw Cyan Bounding Box for Distance Target
+      // Draw Light Gold Bounding Box for Distance Target
       const box2X = w * 0.62 + Math.cos(frameCount * 0.015) * 6;
       const box2Y = h * 0.32;
       const box2W = w * 0.22;
       const box2H = h * 0.28;
 
-      ctx.strokeStyle = '#00f0ff';
+      ctx.strokeStyle = '#d8a85e';
       ctx.lineWidth = 2;
       ctx.strokeRect(box2X, box2Y, box2W, box2H);
 
-      ctx.fillStyle = '#00f0ff';
+      ctx.fillStyle = '#d8a85e';
       ctx.fillRect(box2X, box2Y - 22, 190, 22);
       ctx.fillStyle = '#050811';
       ctx.font = 'bold 11px JetBrains Mono';
       ctx.fillText('TERRENO: PENDIENTE [98%]', box2X + 6, box2Y - 7);
     } else if (activeCameraMode === 'ov5647') {
       // IR Thermal / Night Vision scan lines
-      ctx.fillStyle = 'rgba(0, 255, 136, 0.04)';
+      ctx.fillStyle = 'rgba(184, 139, 69, 0.05)';
       const scanY = (frameCount * 2) % h;
       ctx.fillRect(0, scanY, w, 4);
 
-      ctx.fillStyle = '#00ff88';
+      ctx.fillStyle = '#d8a85e';
       ctx.font = 'bold 12px Orbitron';
       ctx.fillText('IR NIGHT VISION ACTIVE // 850nm', 20, 30);
     } else if (activeCameraMode === 'ptz') {
       // Compass heading scale
-      ctx.fillStyle = '#00f0ff';
+      ctx.fillStyle = '#d8a85e';
       ctx.font = '12px JetBrains Mono';
       ctx.fillText(`BEARING: ${((currentYaw + 360) % 360).toFixed(1)}° NNE`, 20, 30);
     }
@@ -192,5 +192,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const lonOffset = (Math.random() - 0.5) * 0.00005;
       elGps.textContent = `10.${(48060 + latOffset * 1000).toFixed(0)}° N, 66.${(90360 + lonOffset * 1000).toFixed(0)}° W`;
     }
+
+    // Update Hero Artificial Horizon Readouts
+    const elHeroPitch = document.getElementById('hero-hud-pitch');
+    const elHeroRoll = document.getElementById('hero-hud-roll');
+    const elHeroRollAngle = document.getElementById('hero-hud-roll-angle');
+    const simulatedHeroRoll = currentRoll + 4.0;
+
+    if (elHeroPitch) elHeroPitch.textContent = `${currentPitch >= 0 ? '+' : ''}${currentPitch.toFixed(1)}°`;
+    if (elHeroRoll) elHeroRoll.textContent = `${simulatedHeroRoll >= 0 ? '+' : ''}${simulatedHeroRoll.toFixed(1)}°`;
+    if (elHeroRollAngle) elHeroRollAngle.textContent = `${simulatedHeroRoll >= 0 ? '+' : ''}${simulatedHeroRoll.toFixed(1)}° INCLINADO`;
   }, 1000);
 });

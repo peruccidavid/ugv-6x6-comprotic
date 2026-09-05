@@ -1,15 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
 
 :root {
   --bg-darker: #050811;
   --bg-dark: #0b101d;
   --bg-card: rgba(15, 23, 42, 0.75);
-  --bg-card-border: rgba(16, 185, 129, 0.25);
+  --bg-card-border: rgba(184, 139, 69, 0.25);
   
-  --tactical-green: #00ff88;
-  --tactical-green-glow: rgba(0, 255, 136, 0.4);
-  --cyber-cyan: #00f0ff;
-  --cyber-cyan-glow: rgba(0, 240, 255, 0.4);
+  --tactical-primary: #b88b45;
+  --tactical-primary-light: #d8a85e;
+  --tactical-primary-glow: rgba(184, 139, 69, 0.45);
+  --tactical-primary-subtle: rgba(184, 139, 69, 0.12);
+
+  --tactical-green: #b88b45;
+  --tactical-green-glow: rgba(184, 139, 69, 0.45);
+  --cyber-cyan: #d8a85e;
+  --cyber-cyan-glow: rgba(216, 168, 94, 0.4);
   --warning-amber: #f59e0b;
   --alert-red: #ef4444;
   
@@ -20,9 +25,70 @@
 body {
   background-color: var(--bg-darker);
   color: var(--text-main);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   overflow-x: hidden;
   position: relative;
+}
+
+/* Headers and links with font-weight > 600 */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+a, button {
+  font-weight: 700;
+}
+
+/* 3D Holographic Rotating Cunaguaro Emblem */
+.cunaguaro-3d-wrapper {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.cunaguaro-3d-card {
+  transform-style: preserve-3d;
+  animation: cunaguaroRotate3D 6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+  will-change: transform;
+  transform-origin: center center;
+}
+
+.cunaguaro-3d-wrapper:hover .cunaguaro-3d-card {
+  animation-play-state: paused;
+}
+
+@keyframes cunaguaroRotate3D {
+  0% {
+    transform: perspective(1000px) rotateY(-24deg) rotateX(8deg) scale(1);
+    box-shadow: -8px 12px 30px rgba(184, 139, 69, 0.35);
+  }
+  50% {
+    transform: perspective(1000px) rotateY(0deg) rotateX(-6deg) scale(1.06);
+    box-shadow: 0px 16px 36px rgba(184, 139, 69, 0.55);
+  }
+  100% {
+    transform: perspective(1000px) rotateY(24deg) rotateX(8deg) scale(1);
+    box-shadow: 8px 12px 30px rgba(184, 139, 69, 0.35);
+  }
+}
+
+/* 3D Gyroscopic rings */
+@keyframes gyroSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes radarSpinReverse {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.cunaguaro-gyro-ring {
+  animation: gyroSpin 14s linear infinite;
+}
+
+.cunaguaro-radar-ring {
+  animation: radarSpinReverse 20s linear infinite;
 }
 
 /* Custom Tactical Grid Background */
@@ -34,7 +100,7 @@ body {
 }
 
 .tactical-dots-bg {
-  background-image: radial-gradient(rgba(0, 240, 255, 0.15) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(184, 139, 69, 0.2) 1px, transparent 1px);
   background-size: 24px 24px;
 }
 
@@ -56,15 +122,15 @@ body {
   background: rgba(11, 16, 29, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 240, 255, 0.18);
+  border: 1px solid rgba(184, 139, 69, 0.22);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .hud-card:hover {
-  border-color: rgba(0, 255, 136, 0.5);
-  box-shadow: 0 12px 40px 0 rgba(0, 255, 136, 0.15), inset 0 0 15px rgba(0, 255, 136, 0.05);
+  border-color: rgba(184, 139, 69, 0.6);
+  box-shadow: 0 12px 40px 0 rgba(184, 139, 69, 0.2), inset 0 0 15px rgba(184, 139, 69, 0.08);
   transform: translateY(-2px);
 }
 
@@ -82,39 +148,75 @@ body {
 .hud-corners::before {
   top: -1px;
   left: -1px;
-  border-top: 2px solid var(--cyber-cyan);
-  border-left: 2px solid var(--cyber-cyan);
+  border-top: 2px solid var(--tactical-primary);
+  border-left: 2px solid var(--tactical-primary);
 }
 
 .hud-corners::after {
   bottom: -1px;
   right: -1px;
-  border-bottom: 2px solid var(--cyber-cyan);
-  border-right: 2px solid var(--cyber-cyan);
+  border-bottom: 2px solid var(--tactical-primary);
+  border-right: 2px solid var(--tactical-primary);
 }
 
-.hud-corners-green::before {
-  border-color: var(--tactical-green);
+.hud-corners-green::before,
+.hud-corners-gold::before {
+  border-color: var(--tactical-primary);
 }
-.hud-corners-green::after {
-  border-color: var(--tactical-green);
+.hud-corners-green::after,
+.hud-corners-gold::after {
+  border-color: var(--tactical-primary);
 }
 
 /* Glowing Neon Text and Borders */
-.text-glow-green {
-  text-shadow: 0 0 12px var(--tactical-green-glow);
+.text-glow-green,
+.text-glow-gold {
+  text-shadow: 0 0 14px var(--tactical-primary-glow);
 }
 
 .text-glow-cyan {
   text-shadow: 0 0 12px var(--cyber-cyan-glow);
 }
 
-.border-glow-cyan {
-  box-shadow: 0 0 15px var(--cyber-cyan-glow);
+.border-glow-cyan,
+.border-glow-gold,
+.border-glow-green {
+  box-shadow: 0 0 15px var(--tactical-primary-glow);
 }
 
-.border-glow-green {
-  box-shadow: 0 0 15px var(--tactical-green-glow);
+/* COMPROTIC Footer Logo Glowing Hover Effect */
+.comprotic-footer-logo-link {
+  display: inline-block;
+  position: relative;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 8px;
+}
+
+.comprotic-footer-logo-link img {
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.9));
+}
+
+.comprotic-footer-logo-link:hover img {
+  filter: drop-shadow(0 0 16px rgba(0, 203, 230, 0.8)) drop-shadow(0 0 28px rgba(184, 139, 69, 0.65)) brightness(1.2);
+  transform: translateY(-2px) scale(1.03);
+}
+
+.comprotic-footer-logo-link::after {
+  content: '';
+  position: absolute;
+  inset: -8px -12px;
+  border-radius: 14px;
+  background: radial-gradient(ellipse at center, rgba(0, 203, 230, 0.3) 0%, rgba(184, 139, 69, 0.25) 45%, transparent 75%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: -1;
+  filter: blur(10px);
+}
+
+.comprotic-footer-logo-link:hover::after {
+  opacity: 1;
 }
 
 /* Scanner Line Animation */
@@ -206,11 +308,11 @@ body {
 }
 ::-webkit-scrollbar-thumb {
   background: #1e293b;
-  border: 1px solid rgba(0, 240, 255, 0.2);
+  border: 1px solid rgba(184, 139, 69, 0.3);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--cyber-cyan);
+  background: var(--tactical-primary);
 }
 
 /* Tab Switcher Styling */
@@ -221,10 +323,10 @@ body {
 }
 
 .tab-btn.active {
-  background: rgba(0, 255, 136, 0.15);
-  border-color: var(--tactical-green);
-  color: var(--tactical-green);
-  box-shadow: 0 0 12px rgba(0, 255, 136, 0.2);
+  background: rgba(184, 139, 69, 0.18);
+  border-color: var(--tactical-primary);
+  color: var(--tactical-primary-light);
+  box-shadow: 0 0 12px rgba(184, 139, 69, 0.25);
 }
 
 /* Glowing Pulsing Status Dot */
@@ -232,8 +334,8 @@ body {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: var(--tactical-green);
-  box-shadow: 0 0 10px var(--tactical-green);
+  background-color: var(--tactical-primary);
+  box-shadow: 0 0 10px var(--tactical-primary);
   animation: status-pulse 1.8s infinite;
 }
 
@@ -247,3 +349,52 @@ body {
   background: rgba(3, 7, 18, 0.88);
   backdrop-filter: blur(12px);
 }
+
+/* Collapsible Top Telemetry Live Feed on Scroll */
+#top-telemetry-feed {
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              padding 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              margin 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.25s ease;
+  max-height: 60px;
+  opacity: 1;
+  transform: translateY(0);
+  overflow: hidden;
+}
+
+#top-telemetry-feed.telemetry-hidden {
+  max-height: 0 !important;
+  opacity: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  border-top-color: transparent !important;
+  transform: translateY(-8px);
+  pointer-events: none;
+}
+
+/* Tactical Artificial Horizon Gyroscopic Simulation */
+@keyframes horizonTiltFloat {
+  0% {
+    transform: rotate(-5.4deg) translateY(2px);
+  }
+  35% {
+    transform: rotate(-4.2deg) translateY(0.5px);
+  }
+  70% {
+    transform: rotate(-6.8deg) translateY(3.5px);
+  }
+  100% {
+    transform: rotate(-5.1deg) translateY(1.5px);
+  }
+}
+
+.artificial-horizon-gyro {
+  transform-origin: 50px 50px;
+  animation: horizonTiltFloat 6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  will-change: transform;
+}
+
